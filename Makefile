@@ -1,11 +1,11 @@
-IDIR =./lib
-CC=gcc
+IDIR =$(PWD)/lib
+CC=aarch64-none-linux-gnu-gcc
 CFLAGS=-I$(IDIR)
 
-ODIR=.
-LDIR =./lib
+ODIR=$(PWD)
+LDIR =$(PWD)/lib
 
-LIBS=-liio
+LIBS=$(PWD)/lib/libiio.a
 
 _DEPS = iio.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
