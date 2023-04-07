@@ -5,7 +5,7 @@ CFLAGS=-I$(IDIR)
 ODIR=$(PWD)
 LDIR =$(PWD)/lib
 
-LIBS=$(PWD)/lib/libiio.a
+LIBS=$(PWD)/lib/libiio.so.0.24
 
 _DEPS = iio.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -23,4 +23,4 @@ kl15_monitor: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
+	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
