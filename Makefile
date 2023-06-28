@@ -5,7 +5,7 @@ CFLAGS=-I$(IDIR)
 ODIR=$(PWD)
 LDIR =$(PWD)/lib
 
-LIBS=$(PWD)/lib/libiio.so.0.24
+LIBS=$(PWD)/lib/libiio.so.0
 
 _DEPS = iio.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
