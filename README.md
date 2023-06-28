@@ -5,4 +5,5 @@ To build on Linux, download the aarch64-none-linux-gun-gcc compiler and set it u
 
 arguments: 0 = moduline iv, 1 = moduline mini, 2 = moduline display.
 
+from V1.0.0
 put libiio.so.0 in /usr/lib/aarch64-linux-gnu/
