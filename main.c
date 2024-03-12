@@ -32,7 +32,7 @@ uint16_t GocontrollProcessorboardSupply_ReadAdc(uint8_t supply) {
 }
 
 int main(int argc, char** argv){
-    printf("V1.0.0\n");
+    printf("V1.1.0\n");
     uint8_t count = 0;
     int type;
     //get the controller type from the argument or default to moduline 4
