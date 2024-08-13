@@ -1,25 +1,29 @@
 const std = @import("std");
 
+const version = "1.1.1";
+
 pub fn build(b: *std.Build) !void {
+    const target = b.standardTargetOptions(.{ .default_target = .{
+        .cpu_arch = .aarch64,
+        .os_tag = .linux,
+        .abi = .gnu,
+        .glibc_version = .{ .major = 2, .minor = 31, .patch = 0 },
+    } });
+
+    const semver = try std.SemanticVersion.parse(version);
+
     const exe = b.addExecutable(.{
-        .name = "kl15_monitor",
-        .root_source_file = .{ .path = "main.c" },
-        .target = std.zig.CrossTarget{
-            .os_tag = .linux,
-            .cpu_arch = .aarch64,
-            .abi = .gnu,
-            .glibc_version = std.SemanticVersion{ .major = 2, .minor = 31, .patch = 0 },
-        },
-        .version = .{ .major = 1, .minor = 1, .patch = 0 },
-        .optimize = std.builtin.OptimizeMode.ReleaseSmall,
+        .name = "go-auto-shutdown",
+        .target = target,
+        .version = semver,
+        .optimize = .ReleaseSmall,
+        .link_libc = true,
+        .strip = false,
     });
-
-    exe.addLibraryPath(std.build.LazyPath{ .cwd_relative = "lib/" });
-    try exe.include_dirs.append(std.Build.Step.Compile.IncludeDir{ .path = std.build.LazyPath{ .cwd_relative = "lib/" } });
-
+    exe.root_module.addCMacro("VERSION", version); //add executable version as a #define
+    exe.addCSourceFile(.{ .file = .{ .cwd_relative = "main.c" } });
     exe.linkSystemLibrary("libiio");
     exe.dead_strip_dylibs = true;
-    exe.linkLibC();
 
     b.installArtifact(exe);
 }
