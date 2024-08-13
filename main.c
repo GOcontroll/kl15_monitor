@@ -1,5 +1,6 @@
 #define _GNU_SOURCE  // enable the strcasestr function from string.h
 
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +50,7 @@ int main(int argc, char **argv) {
   int type;
   int hw_file;
   char hw_buffer[48];
-  hw_file = fopen("/sys/firmware/devictree/base/hardware", "r");
+  hw_file = open("/sys/firmware/devictree/base/hardware", O_RDONLY);
   if (hw_file < 0) {
     fprintf(stderr, "Could not get controller type\n");
     exit(EXIT_FAILURE);
