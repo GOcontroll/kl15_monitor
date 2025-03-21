@@ -17,8 +17,9 @@
 
 %:
 	dh $@
-	dh_installsystemd --no-enable --no-start go-auto-shutdown.service
 
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start go-auto-shutdown.service
 
 # dh_make generated override targets.
 # This is an example for Cmake (see <https://bugs.debian.org/641051>).

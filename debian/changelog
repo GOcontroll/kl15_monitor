@@ -1,5 +1,5 @@
-go-auto-shutdown (1.2.0) UNRELEASED; urgency=medium
+go-auto-shutdown (1.2.0) bookworm; urgency=medium
 
   * Initial release.
 
- -- Maud Spierings <maudspierings@gocontroll.com>  Thu, 20 Mar 2025 12:48:43 +0100
+ -- Maud Spierings <maudspierings@gocontroll.com>  Fri, 21 Mar 2025 14:03:36 +0100
