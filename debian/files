@@ -1,0 +1,3 @@
+go-auto-shutdown-dbgsym_1.0.0_arm64.deb debug optional automatic=yes
+go-auto-shutdown_1.0.0_arm64.buildinfo misc optional
+go-auto-shutdown_1.0.0_arm64.deb misc optional

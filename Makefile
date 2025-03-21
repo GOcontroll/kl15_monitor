@@ -1,26 +1,20 @@
-IDIR =$(PWD)/lib
-CC=aarch64-none-linux-gnu-gcc
-CFLAGS=-I$(IDIR)
-
 ODIR=$(PWD)
-LDIR =$(PWD)/lib
-
-LIBS=$(PWD)/lib/libiio.so.0
-
-_DEPS = iio.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
+LIBS = -liio
 
-$(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(ODIR)/%.o: %.c
+	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
 kl15_monitor: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
+install: kl15_monitor
+	install -Dm644 kl15_monitor $(DESTDIR)/usr/bin/kl15_monitor
+
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+	rm -f $(ODIR)/*.o *~ core

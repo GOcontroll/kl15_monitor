@@ -1,0 +1,22 @@
+Source: go-auto-shutdown
+Section: misc
+Priority: optional
+Maintainer: Maud Spierings <maudspierings@gocontroll.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+Standards-Version: 4.6.2
+Homepage: https://gocontroll.com
+Vcs-Browser: https://github.com/GOcontroll/kl15_monitor
+Vcs-Git: https://github.com/GOcontroll/kl15_monitor.git
+
+Package: go-auto-shutdown
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: A simple program that monitors the kl15 to shut down
+ When this service is enable the controller will shut down if there
+ is no kl15 and the go-simulink is not active.
+ If go-simulink is active it is determined that it will control
+ whether the controller should shut down

@@ -1,4 +1,10 @@
-
+kl15_monitor
 main.o
 zig-cache/
 zig-out/
+debian/.debhelper
+debian/go-auto-shutdown
+debian/debhelper-build-stamp
+debian/go-auto-shutdown.postrm.debhelper
+debian/go-auto-shutdown.substvars
+

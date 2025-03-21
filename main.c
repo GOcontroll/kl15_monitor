@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 #define MODULINE4 0
 #define MODULINEMINI 1
@@ -31,16 +33,68 @@ uint16_t GocontrollProcessorboardSupply_ReadAdc(uint8_t supply) {
     return (uint16_t)((float)(strtof(buf, NULL) * 25.54)); //25.54 = ((3.35/1023)/1.5)*11700
 }
 
+int get_gocontroll_type() {
+	int ret;
+	ssize_t bufn;
+	FILE *modelfile;
+	char modelbuff[30];
+	modelfile = fopen("/sys/firmware/devicetree/base/model","r");
+	if (modelfile == NULL) {
+		fprintf(stderr, "err: could not open model file: %s\n",strerror(errno));
+		return -1;
+	}
+
+	bufn = fread(modelbuff, sizeof(char), sizeof(modelbuff), modelfile);
+	if (bufn < 0) {
+		fprintf(stderr, "err: could not read model file\n");
+		fclose(modelfile);
+		return -1;
+	}
+
+	if (strstr(modelbuff, "Moduline IV") != NULL) {
+		printf("detected: Moduline IV\n");
+		ret = MODULINE4;
+	} else if (strstr(modelbuff, "Moduline Mini") != NULL) {
+		printf("detected: Moduline Mini\n");
+		ret = MODULINEMINI;
+	} else if (strstr(modelbuff, "Moduline Display") != NULL) {
+		printf("detected: Moduline Display\n");
+		ret = MODULINEDISP;
+	} else {
+		modelbuff[sizeof(modelbuff)-1] = 0;
+		fprintf(stderr, "err: could not find a matching controller type in the string: %s\n", modelbuff);
+		ret = -1;
+	}
+	fclose(modelfile);
+	return ret;
+}
+		
+
 int main(int argc, char** argv){
-    printf("V1.1.0\n");
+    printf("V1.2.0\n");
     uint8_t count = 0;
     int type;
-    //get the controller type from the argument or default to moduline 4
+    //get the controller type from the argument
     if (argc == 2) {
         type = atoi(argv[1]);
     } else {
-        type = 0;
+        type = get_gocontroll_type();
     }
+
+    //set the number of kl15s present on this controller
+    uint8_t kl15s;
+    switch (type) {
+        case MODULINE4 ... MODULINEMINI:
+            kl15s=3;
+            break;
+        case MODULINEDISP:
+            kl15s=1;
+            break;
+        default:
+            fprintf(stderr, "err: unknown controller type\n");
+	    exit(EXIT_FAILURE);
+    }
+
     iioContext = iio_create_local_context();
 
     // get the mcp3004 from the context
@@ -64,19 +118,6 @@ int main(int argc, char** argv){
     if (channel_count < 4) {
         fprintf(stderr,"Invalid ADC channel count.");
         exit(EXIT_FAILURE);}
-
-    //set the number of kl15s present on this controller
-    uint8_t kl15s;
-    switch (type) {
-        case MODULINE4 ... MODULINEMINI:
-            kl15s=3;
-            break;
-        case MODULINEDISP:
-            kl15s=1;
-            break;
-        default:
-            kl15s=3;
-    }
 
     //endless loop till the controller shuts down or the program gets terminated from the outside
     while (count <= 20) {
